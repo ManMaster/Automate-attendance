@@ -1,8 +1,11 @@
-//author = Yuxiang Sun && Yue Yu
+//author = MM && YY
 
 var randomSignInMinute = 0;
 var randomSignOutMinute = 0;
 var randomSignSecond = 0;
+
+var signInHour = 8;
+var signOutHour = 17;
 
 function getRandomNumber(min,max) {	//get random number between min and max
 	var range = max - min;
@@ -13,18 +16,22 @@ function getRandomNumber(min,max) {	//get random number between min and max
 
 function getSignInMinute() {
 	setTimeout(getSignInMinute,1000*60*60*24);		//get random sign in minute in 24 hours
-	randomSignInMinute = getRandomNumber(0,34);
+	randomSignInMinute = getRandomNumber(0,25);		//set sign in minute range
 }
 //console.log(getSignInMinute());
 
 function getSignOutMinute() {
 	setTimeout(getSignOutMinute,1000*60*60*24);		//get random sign out minute in 24 hours
-	randomSignOutMinute = getRandomNumber(25,59);
+	randomSignOutMinute = getRandomNumber(25,40);	//set sign out minute range
 }
 
 function getSignSecond() {
 	setTimeout(getSignSecond,1000*60*60*12);		//get randomw sign second in 12 hours
-	randomSignSecond = getRandomNumber(0,59);
+	randomSignSecond = getRandomNumber(0,59);		//set sign second range
+	var date = new Date();
+	console.log("Now Time is:",date.toString());
+	console.log("Estimate Sign In Time is:",date.toLocaleDateString(),signInHour,":",randomSignInMinute,":",randomSignSecond);		//out put sign time
+	console.log("Estimate Sign Out Time is:",date.toLocaleDateString(),signOutHour,":",randomSignOutMinute,":",randomSignSecond);
 }
 
 function doClickWindow() {
@@ -33,7 +40,7 @@ function doClickWindow() {
 }
 
 function doSignIn(hour,minute) {			//do sign in action
-	if(hour <= 8 && minute <= 34) {
+	if(hour <= signInHour && minute <= 34) {
 		$("#signIn").click();
 		var id = window.setTimeout(doClickWindow,3000);		//Click window after 3000 milliseconds
 		document.onclick=function() {
@@ -43,7 +50,7 @@ function doSignIn(hour,minute) {			//do sign in action
 }
 
 function doSignOut(hour,minute) {			//do sign out action
-	if(hour >= 17 && minute >= 25) {
+	if(hour >= signOutHour && minute >= 25) {
 		$("#signOut").click();
 		var id = window.setTimeout(doClickWindow,3000);		//Click window after 3000 milliseconds
 		document.onclick=function() {
@@ -58,24 +65,26 @@ function loopGetTime() {		//get time recursively
 	var hour = date.getHours();		//get time
 	var minute = date.getMinutes();
 	var second = date.getSeconds();
-	
-	if(date.getDay() <= 5 && date.getDay() >= 1) { 		//judge if it's a weekday
+	var day = date.getDay();
+	if(day >= 1 && day <= 5) { 		//judge if it's a weekday
 		//console.log(date.format("HH:mm:ss")); 
-		if(hour == 8 && minute == randomSignInMinute && second == randomSignSecond) {
-			console.log(date.format("HH:mm:ss")); 
+		if(hour == signInHour && minute == randomSignInMinute && second == randomSignSecond) {
+			//console.log(date.format("HH:mm:ss")); 
 			doSignIn(hour,minute);
+			console.log("Actual Sign In Time is:",date.toString());
 		}
-		if(hour == 17 && minute == randomSignOutMinute && second == randomSignSecond) {
-			console.log(date.format("HH:mm:ss")); 
+		if(hour == signOutHour && minute == randomSignOutMinute && second == randomSignSecond) {
+			//console.log(date.format("HH:mm:ss")); 
 			doSignOut(hour,minute);
+			console.log("Actual Sign Out Time is:",date.toString());
 		}
-		setTimeout(loopGetTime,1000);		//recursive
+		//setTimeout(loopGetTime,1000);		//recursive, there has a bug.
 	}
+	setTimeout(loopGetTime,1000);		//recursive every second
 }
 
 getSignInMinute()
 getSignOutMinute()
 getSignSecond()
-console.log("Sign In Time:",8,":",randomSignInMinute,":",randomSignSecond);
-console.log("Sign Out Time:",17,":",randomSignOutMinute,":",randomSignSecond);
+
 loopGetTime()

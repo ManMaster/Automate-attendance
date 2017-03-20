@@ -1,8 +1,8 @@
-//author = Yuxiang Sun && Yue Yu
+//author = MM && YY
 
 function doClickWindow() {
-	$("div.messager-body > div.messager-button > a")[0].click();	//Click OK
-	//$("div.messager-body > div.messager-button > a")[1].click();	//Click Cancel
+	//$("div.messager-body > div.messager-button > a")[0].click();	//Click OK
+	$("div.messager-body > div.messager-button > a")[1].click();	//Click Cancel
 }
 
 function doSignIn(hour,minute) {			//do sign in action
@@ -28,15 +28,16 @@ function loopGetTime() {		//get time recursively
 	var minute = date.getMinutes();
 	var second = date.getSeconds();
 	if(date.getDay() <= 5 && date.getDay() >= 1) { 			//judge if it's a weekday
-		if(hour == 15 && minute == 26 && second == 1) {	//judge sign in time, set static sign in time here!!!
+		if(hour == 9 && minute == 50 && second == 1) {	//judge sign in time, set static sign in time here!!!
 				console.log(date.format("HH:mm:ss")); 
 				doSignIn(hour,minute);
 		}
-		if(hour == 15 && minute == 26 && second == 8) {	//judge sign out time, set static sign in time here!!!
+		if(hour == 9 && minute == 50 && second == 8) {	//judge sign out time, set static sign in time here!!!
 				console.log(date.format("HH:mm:ss")); 
 				doSignOut(hour,minute);
 		}
-		setTimeout(loopGetTime,1000);		//recursive
+		//setTimeout(loopGetTime,1000);		//recursive, there has a bug.
 	}
+	setTimeout(loopGetTime,1000);		//recursive every second
 }
 loopGetTime()
